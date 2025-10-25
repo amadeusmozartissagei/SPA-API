@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
-import { getAccessToken, putAccessToken, removeAccessToken, login as apiLogin, register as apiRegister } from '../utils/api';
+import { getAccessToken, putAccessToken, removeAccessToken, login as apiLogin, register as apiRegister, getCurrentUser } from '../utils/api';
 
 const AuthContext = createContext();
 
@@ -16,20 +16,35 @@ export const AuthProvider = ({ children }) => {
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    const token = getAccessToken();
-    if (token) {
-      // In a real app, you might want to validate the token with the server
-      setUser({ token });
-    }
-    setIsLoading(false);
+    const initializeAuth = async () => {
+      const token = getAccessToken();
+      if (token) {
+        try {
+          // Validate token and get user data
+          const userData = await getCurrentUser();
+          setUser({ ...userData, token });
+        } catch (error) {
+          // Token is invalid, remove it
+          console.error('Token validation failed:', error);
+          removeAccessToken();
+        }
+      }
+      setIsLoading(false);
+    };
+
+    initializeAuth();
   }, []);
 
   const login = async (email, password) => {
     try {
       const data = await apiLogin({ email, password });
-      const { accessToken, user: userData } = data;
+      const { accessToken } = data;
       putAccessToken(accessToken);
+      
+      // Fetch user data after successful login
+      const userData = await getCurrentUser();
       setUser({ ...userData, token: accessToken });
+      
       return { success: true };
     } catch (error) {
       console.error('Login error:', error);

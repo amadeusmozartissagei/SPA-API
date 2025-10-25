@@ -56,7 +56,11 @@ const Header = () => {
                   </button>
                   
                   <span className="text-muted">
-                    {user?.name}
+                    👤 {user?.name}
+                  </span>
+                  
+                  <span className="text-muted" style={{ fontSize: '0.8rem' }}>
+                    {user?.email}
                   </span>
                   
                   <button

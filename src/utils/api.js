@@ -199,5 +199,17 @@ export const deleteNote = async (id) => {
   return responseJson.data;
 };
 
+// API function to get current user data
+export const getCurrentUser = async () => {
+  const response = await fetchWithToken(`${API_BASE_URL}/users/me`);
+  const responseJson = await response.json();
+
+  if (responseJson.status !== 'success') {
+    throw new Error(responseJson.message);
+  }
+
+  return responseJson.data;
+};
+
 // Export helper functions
 export { getAccessToken, putAccessToken, removeAccessToken };

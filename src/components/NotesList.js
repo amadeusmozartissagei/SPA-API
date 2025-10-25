@@ -2,11 +2,13 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { useNotes } from '../hooks/useNotes';
 import { useLanguage } from '../contexts/LanguageContext';
+import { useAuth } from '../contexts/AuthContext';
 import NoteCard from './NoteCard';
 
 const NotesList = () => {
   const { notes, isLoading, error, removeNote, archiveNoteById } = useNotes();
   const { t } = useLanguage();
+  const { user } = useAuth();
 
   if (isLoading) {
     return (
@@ -53,7 +55,15 @@ const NotesList = () => {
   return (
     <div className="container">
       <div className="d-flex justify-content-between align-items-center mb-4">
-        <h2>{t('notes')}</h2>
+        <div>
+          <h2>{t('notes')}</h2>
+          <p className="text-muted mb-0">
+            {t('language') === 'id' 
+              ? `Halo ${user?.name}! Kelola catatan Anda di sini.` 
+              : `Hello ${user?.name}! Manage your notes here.`
+            }
+          </p>
+        </div>
         <Link to="/add" className="btn btn-primary">
           {t('addNote')}
         </Link>

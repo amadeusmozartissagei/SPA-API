@@ -2,6 +2,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 import { useLanguage } from '../contexts/LanguageContext';
+import UserProfile from './UserProfile';
 
 const Home = () => {
   const { isAuthenticated, user } = useAuth();
@@ -33,7 +34,7 @@ const Home = () => {
 
   return (
     <div className="container">
-      <div className="text-center mt-5">
+      <div className="text-center mt-5 mb-5">
         <h1>👋 {t('language') === 'id' ? 'Selamat datang' : 'Welcome'}, {user?.name}!</h1>
         <p className="text-muted mb-4">
           {t('language') === 'id' 
@@ -52,6 +53,10 @@ const Home = () => {
             ➕ {t('addNote')}
           </Link>
         </div>
+      </div>
+      
+      <div style={{ maxWidth: '600px', margin: '0 auto' }}>
+        <UserProfile />
       </div>
     </div>
   );
